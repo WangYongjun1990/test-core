@@ -1,14 +1,5 @@
 # -*- coding:utf-8 -*-
 
-"""
-File Name: `db_action`.py
-Version:
-Description:
-
-Author: wangyongjun
-Date: 2018/6/13 14:09
-"""
-
 from flask import Blueprint
 from flask_restful import Resource
 from flask import request
@@ -17,11 +8,10 @@ from flask import jsonify
 from mitest.models.mitest_platform import EnvInfo
 from mitest.api.comm_log import logger
 
-# 蓝图
-db_action = Blueprint('db_action_interface', __name__)
+env = Blueprint('env_interface', __name__)
 
 
-class DbAction(Resource):
+class Env(Resource):
     def __init__(self):
         pass
 

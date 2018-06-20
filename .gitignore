@@ -14,3 +14,6 @@
 
 # 忽略虚拟环境文件夹
 venv/
+
+# 忽略migration文件夹
+migrations/

@@ -22,7 +22,7 @@ class Config(object):
     # log
     LINUX_LOG = '/usr/local/src/logs/mitest_platform/mitest_platform.log'
     WINDOWS_LOG = r'E:\git_work\flask_study\my_flask\logs\flask.log'
-    MAC_LOG = '/usr/local/src/logs/mitest_platform/mitest_platform.log'
+    MAC_LOG = '/Users/wangyongjun/git_work/mitest-platform-core/mitest/logs/mitest_platform.log'
 
     if platform.system() == 'Linux':
         LOG_PATH = LINUX_LOG

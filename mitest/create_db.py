@@ -9,6 +9,6 @@ Author: wangyongjun
 Date: 2018/6/12 11:35
 """
 
-from my_flask import db
+from mitest import db
 
 db.create_all()

@@ -21,16 +21,19 @@ app = Flask(__name__)
 
 current_config = load_config("SIT")
 app.config.from_object(current_config)
-# 创建1个SQLAlichemy实例
+# 创建1个SQLAlchemy实例
 db = SQLAlchemy(app)
 
 
 from .views import db_action, DbAction
+from .views import env, Env
 
 app.register_blueprint(db_action)
+app.register_blueprint(env)
 
 view = Api(app)
 view.add_resource(DbAction, '/db')
+view.add_resource(Env, '/env/<action>')
 
 migrate = Migrate(app, db)
 
