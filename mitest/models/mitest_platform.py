@@ -40,7 +40,7 @@ class TestReport(db.Model):
     duration = db.Column(db.String(50))
     status = db.Column(db.String(50))
     run_type = db.Column(db.Integer)
-    report = db.Column(db.Text(4294000000))
+    report = db.Column(db.Text(4294000000), nullable=False)
     system_id = db.Column(db.Integer, db.ForeignKey('system_info.id'))
     system = db.relationship('SystemInfo', backref=db.backref('test_reports'))
 
@@ -114,7 +114,7 @@ class TestcaseInfo(db.Model):
     testcase_name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Integer, default=0, nullable=False)
     include = db.Column(db.String(400))
-    request = db.Column(db.Text)
+    request = db.Column(db.Text, nullable=False)
     testsuite_id = db.Column(db.Integer, db.ForeignKey('testsuite_info.id'))
     module_id = db.Column(db.Integer, db.ForeignKey('module_info.id'))
     system_id = db.Column(db.Integer, db.ForeignKey('system_info.id'))

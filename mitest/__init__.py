@@ -21,19 +21,33 @@ app = Flask(__name__)
 
 current_config = load_config("SIT")
 app.config.from_object(current_config)
+
 # 创建1个SQLAlchemy实例
 db = SQLAlchemy(app)
 
+from .views import (
+    env, Env,
+    project, Project,
+    system, System,
+    module, Module,
+    testsuite, Testsuite,
+    testcase, Testcase,
+)
 
-from .views import db_action, DbAction
-from .views import env, Env
-
-app.register_blueprint(db_action)
 app.register_blueprint(env)
+app.register_blueprint(project)
+app.register_blueprint(system)
+app.register_blueprint(module)
+app.register_blueprint(testsuite)
+app.register_blueprint(testcase)
 
 view = Api(app)
-view.add_resource(DbAction, '/db')
 view.add_resource(Env, '/env/<action>')
+view.add_resource(Project, '/project/<action>')
+view.add_resource(System, '/system/<action>')
+view.add_resource(Module, '/module/<action>')
+view.add_resource(Testsuite, '/testsuite/<action>')
+view.add_resource(Testcase, '/testcase/<action>')
 
 migrate = Migrate(app, db)
 
