@@ -29,13 +29,25 @@ class Testsuite(Resource):
         data = get_request_json()
 
         if action == 'add':
-            pass
+            try:
+                testsuite_name = data.pop('testsuiteName')
+                simple_desc = data.pop('simpleDesc', None)
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
 
         elif action == 'edit':
-            pass
+            try:
+                id = data.pop('id')
+                testsuite_name = data.pop('testsuiteName')
+                simple_desc = data.pop('simpleDesc', None)
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
 
         elif action == 'delete':
-            pass
+            try:
+                id = data.pop('id')
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
 
         elif action == 'detail':
             pass

@@ -28,6 +28,7 @@ def get_current_time():
     """
     return str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
 
+
 if __name__ == '__main__':
     print(get_host())
     print(get_current_time())
