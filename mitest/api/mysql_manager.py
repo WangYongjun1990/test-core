@@ -170,3 +170,8 @@ class TestcaseInfoManager(object):
         obj = TestcaseInfo.query.filter_by(id=id_).first()
         db.session.delete(obj)
         db.session.commit()
+
+    @staticmethod
+    def get_testcase(id_):
+        obj = TestcaseInfo.query.filter_by(id=id_).first()
+        return obj

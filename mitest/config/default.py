@@ -24,6 +24,7 @@ class Config(object):
     # log
     LINUX_LOG = '/usr/local/src/logs/mitest_platform/mitest_platform.log'
     WINDOWS_LOG = os.getcwd() + r'\mitest\logs\flask.log'
+    # WINDOWS_LOG = r'E:\git_mime\mitest-platform-core\mitest\logs\flask.log'
     MAC_LOG = '/Users/wangyongjun/git_work/mitest-platform-core/mitest/logs/flask.log'
 
     if platform.system() == 'Linux':
