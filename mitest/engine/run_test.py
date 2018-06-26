@@ -11,12 +11,15 @@ Date: 2018/6/22 下午9:49
 import time
 
 from httprunner import HttpRunner
-from mitest.engine.exceptions import RunCaseError
+from mitest.engine.exceptions import RunCaseError, LoadCaseError
 from mitest.engine.load_test import load_test
 
 
 def run_test(**kwargs):
     testset = load_test(**kwargs)
+
+    if not testset:
+        raise LoadCaseError('没有可执行的用例')
 
     print("testset:{0}\n{1}".format(testset, type(testset)))
     try:
@@ -47,8 +50,10 @@ def run(testset_path, report_name='default'):
 
 if __name__ == '__main__':
     kwargs = {
-        "testcase_id_list": ['1', '5'],
-        "env_name": "mock"
+        # "testcase_id_list": ['1', '2', '3'],
+        "env_name": "mock",
+        # "testsuite_id_list": ['1'],
+        "module_id_list": ['4'],
     }
     run_test(**kwargs)
     # run_test(testcase_id='1', env_name='mo2ck')
@@ -96,8 +101,15 @@ if __name__ == '__main__':
                         },
                         {
                             "eq": [
-                                "content.code",
-                                "000"
+                                "content.desc",
+                                {"bds": [], "capital": ["businessapi/ops/file/upload/2/xydadcce31a92e8b1c5",
+                                                        "mm/credit/getUnderWrittingStatus",
+                                                        "mm/credit/getUnderWrittingStatus/2/xydadcce31a92e8b1c5",
+                                                        "mm/credit/queryAccountInfo",
+                                                        "mm/credit/queryAccountInfo/2/xydadcce31a92e8b1c5",
+                                                        "mm/credit/saveUserInfo/2/xydadcce31a92e8b1c5",
+                                                        "mm/credit/withdrawDeposit/2"],
+                                 "ups": ["demo_get", "demo_post", "demo_post_form", "demo_post_json"]}
                             ]
                         }
                     ],
