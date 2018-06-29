@@ -8,7 +8,6 @@ Description:
 Author: wangyongjun
 Date: 2018/6/21 15:37
 """
-
 from mitest import db
 from mitest.models.mitest_platform import EnvInfo, ProjectInfo, SystemInfo, TestsuiteInfo, TestcaseInfo, ModuleInfo
 
@@ -97,6 +96,30 @@ class SystemInfoManager(object):
         db.session.delete(obj)
         db.session.commit()
 
+    @staticmethod
+    def is_system_name_exist(system_name):
+        obj = SystemInfo.query.filter_by(system_name=system_name).first()
+        if obj:
+            return True
+        else:
+            return False    \
+
+    @staticmethod
+    def is_project_id_exist(project_id):
+        obj = ProjectInfo.query.filter_by(id=project_id).first()
+        if not obj:
+            return True
+        else:
+            return False    \
+
+    @staticmethod
+    def is_system_id_exist(id):
+        obj = SystemInfo.query.filter_by(id=id).first()
+        if not obj:
+            return True
+        else:
+            return False
+
 
 class ModuleInfoManager(object):
     @staticmethod
@@ -121,6 +144,20 @@ class ModuleInfoManager(object):
         db.session.delete(obj)
         db.session.commit()
 
+    @staticmethod
+    def query_module(system_id,module_name):
+        obj = ModuleInfo.query.filter_by(system_id = system_id,module_name = module_name).all()
+        return (obj)
+
+    @staticmethod
+    def query_module_id(id):
+        obj = ModuleInfo.query.filter_by(id=id).all()
+        return (obj)
+
+    @staticmethod
+    def query_all_module(system_id):
+        obj = ModuleInfo.query.filter_by(system_id=system_id).all()
+        return (obj)
 
 class TestsuiteInfoManager(object):
     @staticmethod
@@ -144,6 +181,10 @@ class TestsuiteInfoManager(object):
         db.session.delete(obj)
         db.session.commit()
 
+    @staticmethod
+    def query_all_testsuite(module_id):
+        obj = TestsuiteInfo.query.filter_by(module_id=module_id).all()
+        return (obj)
 
 class TestcaseInfoManager(object):
     @staticmethod
@@ -168,8 +209,9 @@ class TestcaseInfoManager(object):
     @staticmethod
     def delete_testcase(id_):
         obj = TestcaseInfo.query.filter_by(id=id_).first()
-        db.session.delete(obj)
-        db.session.commit()
+        if obj:
+            db.session.delete(obj)
+            db.session.commit()
 
     @staticmethod
     def get_testcase(id_):

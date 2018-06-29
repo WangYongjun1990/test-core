@@ -34,6 +34,7 @@ def change_variable_format(request):
 
 def handle_testcase(action, **kwargs):
     """
+    :param action:
     :param kwargs:
     :return:
     """

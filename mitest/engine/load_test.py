@@ -35,20 +35,28 @@ def load_test(**kwargs):
     except AttributeError:
         raise LoadCaseError('No Base Host')
 
+    test_meta_list = []
     if testcase_id:
-        testset = get_testcase_by_id(testcase_id)
+        obj = TestcaseInfo.query.filter_by(id=testcase_id).first()
+        testset = get_testset_from_obj(obj)
         testset = add_base_host(testset, base_host)
+        meta_data = get_meta(obj, testset)
+        test_meta_list.append(meta_data)
 
-        return testset
+        return [[testset], test_meta_list]
 
     elif testcase_id_list and isinstance(testcase_id_list, list):
         testset_list = []
         for testcase_id in testcase_id_list:
-            testset = get_testcase_by_id(testcase_id)
+            obj = TestcaseInfo.query.filter_by(id=testcase_id).first()
+
+            testset = get_testset_from_obj(obj)
             testset = add_base_host(testset, base_host)
             testset_list.append(testset)
+            meta_data = get_meta(obj, testset)
+            test_meta_list.append(meta_data)
 
-        return testset_list
+        return [testset_list, test_meta_list]
 
     elif testsuite_id_list and isinstance(testsuite_id_list, list):
         testset_list = []
@@ -59,8 +67,10 @@ def load_test(**kwargs):
                 testset = get_testset_from_obj(obj)
                 testset = add_base_host(testset, base_host)
                 testset_list.append(testset)
+                meta_data = get_meta(obj, testset)
+                test_meta_list.append(meta_data)
 
-        return testset_list
+        return [testset_list, test_meta_list]
 
     elif module_id_list and isinstance(module_id_list, list):
         testset_list = []
@@ -72,7 +82,7 @@ def load_test(**kwargs):
                 testset = add_base_host(testset, base_host)
                 testset_list.append(testset)
 
-        return testset_list
+        return [testset_list, test_meta_list]
 
     elif system_id_list and isinstance(system_id_list, list):
         testset_list = []
@@ -84,7 +94,7 @@ def load_test(**kwargs):
                 testset = add_base_host(testset, base_host)
                 testset_list.append(testset)
 
-        return testset_list
+        return [testset_list, test_meta_list]
 
 
 def get_testcase_by_id(testcase_id):
@@ -125,3 +135,13 @@ def get_testset_from_obj(obj):
         return json.loads(testset_str)
     except JSONDecodeError:
         raise LoadCaseError('Json Load testcase_info.request Error')
+
+
+def get_meta(obj, testset):
+    meta_dict = {'id': obj.id, 'testcase_name': obj.testcase_name, 'step': []}
+    for step in testset['testcases']:
+        meta_dict['step'].append({'testcase_name': obj.testcase_name, 'step_name': step['name']})
+
+    return meta_dict
+
+
