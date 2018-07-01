@@ -15,6 +15,9 @@ from mitest.httprunner import HttpRunner
 from mitest.engine.exceptions import RunCaseError, LoadCaseError
 from mitest.engine.load_test import load_test
 from mitest.engine.report import perfect_summary
+from mitest.config.default import get_config
+
+config = get_config()
 
 
 def run_test(**kwargs):
@@ -38,7 +41,7 @@ def run_test(**kwargs):
 
         report_path = runner.gen_html_report(
             html_report_name='default',
-            html_report_template=r"E:\git_mime\mitest-platform-core\mitest\engine\templates\default_report_template.html"
+            html_report_template=config.REPORT_TEMPLATE_PATH
         )
         print('report_path:{}'.format(report_path))
     except Exception:

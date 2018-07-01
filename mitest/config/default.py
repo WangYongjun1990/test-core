@@ -27,14 +27,24 @@ class Config(object):
     # WINDOWS_LOG = r'E:\git_mime\mitest-platform-core\mitest\logs\flask.log'
     MAC_LOG = '/Users/wangyongjun/git_work/mitest-platform-core/mitest/logs/flask.log'
 
+    # report path
+    LINUX_REPORT_TEMPLATE = '/user/local/src/mitest-platform-core/mitest/engine/templates/default_report_template.html'
+    WINDOWS_REPORT_TEMPLATE = os.getcwd() + r'\mitest\engine\templates\default_report_template.html'
+    # WINDOWS_REPORT_TEMPLATE = r"E:\git_mime\mitest-platform-core\mitest\engine\templates\default_report_template.html"
+    MAC_REPORT_TEMPLATE = '/Users/wangyongjun/git_work/mitest-platform-core/mitest/engine/templates/default_report_template.html'
+
     if platform.system() == 'Linux':
         LOG_PATH = LINUX_LOG
+        REPORT_TEMPLATE_PATH = LINUX_REPORT_TEMPLATE
     elif platform.system() == 'Windows':
         LOG_PATH = WINDOWS_LOG
+        REPORT_TEMPLATE_PATH = WINDOWS_REPORT_TEMPLATE
     elif platform.system() == 'Darwin':
         LOG_PATH = MAC_LOG
+        REPORT_TEMPLATE_PATH = MAC_REPORT_TEMPLATE
     else:
         LOG_PATH = LINUX_LOG
+        REPORT_TEMPLATE_PATH = LINUX_REPORT_TEMPLATE
 
     # email to
     EMAIL_TO = ['yongjun.wang@mi-me.com']
