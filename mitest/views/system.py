@@ -79,11 +79,6 @@ class System(Resource):
 
             pim.update_system(id_,system_name=system_name, simple_desc=simple_desc, test_user=test_user, dev_user=dev_user, publish_app=publish_app, project_id=project_id)
             return make_response({"code": "000", "desc": "系统修改成功"})
-            # for i in (system_name,simple_desc,project_id,test_user,dev_user,publish_app):
-            #     if i != None:
-            #         pim.update_system(id_,system_name=system_name, simple_desc=simple_desc, test_user=test_user, dev_user=dev_user, publish_app=publish_app, project_id=project_id)
-            #         return make_response({"code": "000", "desc": "系统修改成功"})
-
 
 
         elif action == 'delete':
@@ -103,10 +98,6 @@ class System(Resource):
 
             pim.delete_system(id_)
             return make_response({"code": "000", "desc": "系统删除成功"})
-            # for i in (system_name,simple_desc,project_id,test_user,dev_user,publish_app):
-            #     if i != None:
-            #         pim.update_system(id_,system_name=system_name, simple_desc=simple_desc, test_user=test_user, dev_user=dev_user, publish_app=publish_app, project_id=project_id)
-            #         return make_response({"code": "000", "desc": "系统修改成功"})
 
         elif action == 'detail':
             pass

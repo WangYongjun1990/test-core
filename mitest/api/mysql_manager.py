@@ -40,6 +40,14 @@ class EnvInfoManager(object):
         db.session.delete(obj)
         db.session.commit()
 
+    @staticmethod
+    def is_env_id_exist(id):
+        obj = EnvInfo.query.filter_by(id=id).first()
+        if not obj:
+            return True
+        else:
+            return False
+
 
 class ProjectInfoManager(object):
     @staticmethod
@@ -69,6 +77,22 @@ class ProjectInfoManager(object):
             return True
         else:
             return False
+
+    @staticmethod
+    def project_info():
+
+        obj = ProjectInfo.query.all()
+
+        return obj
+
+
+    @staticmethod
+    def system_info(id_):
+
+        obj = SystemInfo.query.filter_by(project_id=id_).all()
+
+        return obj
+
 
 
 class SystemInfoManager(object):

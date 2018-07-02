@@ -5,7 +5,7 @@ File Name: `project`.py
 Version:
 Description:
 
-Author: wangyongjun
+Author: hanxueyao
 Date: 2018/6/21 11:41
 """
 import json
@@ -66,10 +66,40 @@ class Project(Resource):
             return make_response({"code": "000", "desc": "项目删除成功"})
 
         elif action == 'detail':
-            pass
+            try:
+                pim = ProjectInfoManager()
+                result1 = pim.project_info()
+                i_ = 1
 
-        elif action == 'list':
-            pass
+                desc_list = []
+                projects = []
 
-        else:
-            return make_response({"code": "100", "desc": "url错误，不存在的接口动作<{action}>".format(action=action)})
+                # 循环查询project返回所有的Project数据，并将其加入list 方便遍历
+                for i in result1:
+                    projects.append([i.id, i.project_name])
+
+                    # 遍历project_list 并将其添加到字典中，并对字段赋值
+                for j in projects:
+                    project_dict = {}
+                    project_dict["id"] = i_
+                    project_dict["projectId"] = j[0]
+                    project_dict["label"] = j[1]
+                    project_dict["children"] = []
+                    desc_list.append(project_dict)
+                    result2 = pim.system_info(j[0])
+                    i_ = i_ + 1
+
+                    # 遍历通过project_id查询system_info得到的结果，将其添加到systemlist当中，方便遍历最后组装到response
+                    for k in result2:
+                        print(k)
+                        system_dict = {}
+                        system_dict["id"] = i_
+                        system_dict["systemId"] = k.id
+                        system_dict["label"] = k.system_name
+                        project_dict["children"].append(system_dict)
+                        i_ = i_ + 1
+                return make_response({"code": "000", "desc": desc_list})
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
+
+
