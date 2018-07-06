@@ -18,7 +18,7 @@ from mitest.api.comm_log import logger
 
 def get_request_json():
     data = request.get_json()
-    logger.info('<Request> url= {url}, body= {body}'.format(url=request.url, body=json.dumps(data)))
+    logger.info('<Request> url= {url}, body= {body}'.format(url=request.url, body=json.dumps(data, ensure_ascii=False)))
     return data
 
 

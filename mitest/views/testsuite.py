@@ -16,6 +16,7 @@ from flask_restful import Resource
 from mitest.api.comm_log import logger
 from mitest.views.wrappers import timer
 from mitest.utils.common import get_request_json, make_response
+from mitest.api.mysql_manager import TestsuiteInfoManager
 
 testsuite = Blueprint('testsuite_interface', __name__)
 
@@ -27,6 +28,7 @@ class Testsuite(Resource):
     @timer
     def post(self, action):
         data = get_request_json()
+        tim = TestsuiteInfoManager()
 
         if action == 'add':
             try:
@@ -35,19 +37,28 @@ class Testsuite(Resource):
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
 
+            tim.insert_testsuite(testsuite_name=testsuite_name, simple_desc=simple_desc)
+            return make_response({"code": "000", "desc": "{}测试集已添加".format(testsuite_name)})
+
         elif action == 'edit':
             try:
-                id = data.pop('id')
+                id_ = data.pop('id')
                 testsuite_name = data.pop('testsuiteName')
                 simple_desc = data.pop('simpleDesc', None)
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
 
+            tim.update_testsuite(id_, project_name=testsuite_name, simple_desc=simple_desc)
+            return make_response({"code": "000", "desc": "{}测试集名称已修改".format(testsuite_name)})
+
         elif action == 'delete':
             try:
-                id = data.pop('id')
+                id_ = data.pop('id')
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
+
+            tim.delete_testsuite(id_)
+            return make_response({"code": "000", "desc": "测试集已删除"})
 
         elif action == 'detail':
             pass

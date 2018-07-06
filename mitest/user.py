@@ -9,10 +9,11 @@ Author: wangyongjun
 Date: 2018/6/12 11:41
 """
 import json
+import time
+import random
 
-
-from my_flask import db
-from my_flask.models.mitest_platform import User, ProjectInfo, SystemInfo
+#from mitest import db
+#from mitest.models.mitest_platform import User, ProjectInfo, SystemInfo
 
 
 def insert_user(**kwargs):
@@ -71,27 +72,31 @@ def insert_system(**kwargs):
     db.session.commit()
 
 
+def gen_timestamp(time_flag, count):
+    two_month_ago = 1525276800000
+    one_month_ago = 1527955200000
+    one_week_ago = 1530028800000
+    one_day_ago = 0
+    one_hour_aga = 0
+
+    now = int(1000 * time.time())
+
+    with open('data.txt', mode='w') as data_file:
+        for _ in range(count):
+            if time_flag == '2m':
+                delta = random.randint(two_month_ago, now)
+            elif time_flag == '2m+':
+                delta = random.randint(two_month_ago, one_month_ago)
+            elif time_flag == '1m':
+                delta = random.randint(one_month_ago, now)
+            elif time_flag == '1w':
+                delta = random.randint(one_week_ago, now)
+            elif time_flag == '1d':
+                delta = random.randint(one_day_ago, now)
+            elif time_flag == '1h':
+                delta = random.randint(one_hour_aga, now)
+            print(delta)
+            data_file.write(str(delta)+'\n')
+
 if __name__ == '__main__':
-    # query_user('用户E')
-    # update_user(id=1, username='username哈哈', password='000999')
-    # insert_user(username='用户B', email='23的1@21.com', password='16666d')
-    # query_user('用户A')
-    project = ProjectInfo.query.filter_by(project_name='宝生').first()
-    print(project.id)
-    # insert_system(system_name='wallet', project_id=project.id)
-    # system = SystemInfo.query.filter_by(system_name='wallet').first()
-    # print(system.project_id)
-
-    print(project.systems)
-
-    for system in project.systems:
-        print('-' * 10)
-        print(system.system_name)
-
-    # insert_system(system_name='user-core', project=project)
-
-    system_wallet = SystemInfo.query.filter_by(id='2').first()
-    print(system_wallet.project)
-
-
-
+    gen_timestamp('2m', 100000)

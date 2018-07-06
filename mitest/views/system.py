@@ -5,8 +5,38 @@ File Name: `system`.py
 Version:
 Description:
 
-Author: wangyongjun
+Author: hanxueyao
 Date: 2018/6/21 11:44
+
+增加接口：/system/add
+入参格式：
+    {
+        "systemName": "wallet_system5",
+        "simpleDesc":"123321",(非必填)
+        "testUser":"hanxueyao",
+        "devUser":"hanxueyao",
+        "projectId":3,
+        "publishApp":"wallet"
+    }
+
+修改接口：/system/edit
+
+入参格式：
+    {
+        "systemName": "wallet_system5",
+        "simpleDesc":"123321",
+        "testUser":"hanxueyao",
+        "devUser":"hanxueyao",
+        "projectId":3,
+        "publishApp":"wallet"
+    }
+
+删除接口:/system/delete
+入参格式：
+    {
+        “id":xxx
+    }
+
 """
 import json
 
@@ -44,7 +74,7 @@ class System(Resource):
 
 #判断project_id是否存在
 
-            if pim.is_project_id_exist(project_id):
+            if not pim.is_project_id_exist(project_id):
                 return make_response({"code": "200", "desc": "项目不存在"})
 
 # 判断system_name是否存在
@@ -72,7 +102,7 @@ class System(Resource):
 
             # 判断修改数据是否存在
 
-            if pim.is_system_id_exist(id_):
+            if not pim.is_system_id_exist(id_):
                 return make_response({"code": "200", "desc": "项目不存在,无法修改"})
 
             # 根据入参进行数据修改
@@ -91,7 +121,7 @@ class System(Resource):
 
             # 判断修改数据是否存在
 
-            if pim.is_system_id_exist(id_):
+            if not pim.is_system_id_exist(id_):
                 return make_response({"code": "200", "desc": "项目不存在,无法删除"})
 
             # 根据入参进行数据修改
