@@ -12,6 +12,7 @@ import re
 import string
 import time
 
+from mitest.api.mysql_sql_executor import sql_execute
 from mitest.httprunner.compat import basestring, builtin_str, integer_types, str
 from mitest.httprunner.exception import ParamsError
 from mitest.utils.encryption import Encryption
@@ -150,7 +151,9 @@ def json_contains(check_value, expect_value):
 def db_validate(check_value, expect_value):
     print(check_value, type(check_value))
     print(expect_value, type(expect_value))
-    assert 1 == 0
+    # res = sql_execute(check_value, env_name='aliuat')
+    # check_value = res[0][0]
+    assert check_value == expect_value
 
 """ built-in hooks
 """

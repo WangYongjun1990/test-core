@@ -5,6 +5,7 @@ import os
 import re
 import sys
 
+from mitest.api.mysql_sql_executor import sql_execute
 from mitest.httprunner import exception, testcase, utils
 from mitest.httprunner.compat import OrderedDict
 
@@ -193,8 +194,11 @@ class Context(object):
         # 2, string joined by delimiter. e.g. "status_code", "headers.content-type"
         # 3, regex string, e.g. "LB[\d]*(.*)RB[\d]*"
         # 4, dict or list, maybe containing variables reference, e.g. {"var": "$abc"}
+        # 5, sql, e.g. ""SELECT simple_desc FROM mitest_platform_sit.env_info WHERE env_name='aliuat';"
         if validator['comparator'] == 'db_validate':
-            check_value = check_item
+            # type 5
+            res = sql_execute(check_item, env_name='aliuat')
+            check_value = res[0][0] if res else "数据库没有符合条件的记录"
         elif isinstance(check_item, (dict, list)) or testcase.extract_variables(check_item):
             # type 4 or type 1
             check_value = self.eval_content(check_item)
@@ -231,7 +235,7 @@ class Context(object):
         expect_value = validator_dict["expect"]
 
         if (check_value is None or expect_value is None) \
-            and comparator not in ["is", "eq", "equals", "=="]:
+            and comparator not in ["is", "eq", "equals", "==", "db_validate"]:
             raise exception.ParamsError("Null value can only be compared with comparator: eq/equals/==")
 
         try:
