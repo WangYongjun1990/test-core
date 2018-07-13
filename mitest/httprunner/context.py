@@ -193,7 +193,9 @@ class Context(object):
         # 2, string joined by delimiter. e.g. "status_code", "headers.content-type"
         # 3, regex string, e.g. "LB[\d]*(.*)RB[\d]*"
         # 4, dict or list, maybe containing variables reference, e.g. {"var": "$abc"}
-        if isinstance(check_item, (dict, list)) or testcase.extract_variables(check_item):
+        if validator['comparator'] == 'db_validate':
+            check_value = check_item
+        elif isinstance(check_item, (dict, list)) or testcase.extract_variables(check_item):
             # type 4 or type 1
             check_value = self.eval_content(check_item)
         else:
@@ -235,6 +237,8 @@ class Context(object):
         try:
             validate_func(validator_dict["check_value"], validator_dict["expect"])
         except (AssertionError, TypeError):
+            if comparator == 'json_contains':
+                check_value = check_value.decode('utf-8')
             err_msg = "\n" + "\n".join([
                 "\tcheck item name: %s;" % check_item,
                 "\tcheck item value: %s (%s);" % (check_value, type(check_value).__name__),

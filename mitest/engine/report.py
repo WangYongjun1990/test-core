@@ -16,7 +16,7 @@ def perfect_summary(summary, test_meta_list):
     for testcase in test_meta_list:
         step_list.extend(testcase['step'])
 
-    print(step_list)
+    print('step_list:{}'.format(step_list))
 
     assert len(step_list) == len(summary['records'])
 

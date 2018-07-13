@@ -29,6 +29,53 @@ def get_current_time():
     return str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
 
 
+def is_json_contains(actual, expect):
+    if isinstance(actual, list) and isinstance(expect, list):
+        actual_inner_dict_list = []
+        actual_inner_list_list = []
+        for key in actual:
+            if isinstance(key, dict):
+                actual_inner_dict_list.append(key)
+            elif isinstance(key, list):
+                actual_inner_list_list.append(key)
+        for key in expect:
+            if isinstance(key, dict):
+                flag = False
+                for _key in actual_inner_dict_list:
+                    if is_json_contains(_key, key):
+                        flag = True
+                if not flag:
+                    return False
+            elif isinstance(key, list):
+                flag = False
+                for _key in actual_inner_list_list:
+                    if is_json_contains(_key, key):
+                        flag = True
+                if not flag:
+                    return False
+            elif key not in actual:
+                return False
+
+    elif isinstance(actual, dict) and isinstance(expect, dict):
+        for key in expect:
+            if key not in actual:
+                return False
+            if isinstance(actual[key], dict) and isinstance(expect[key], dict):
+                if not is_json_contains(actual[key], expect[key]):
+                    return False
+            elif isinstance(actual[key], list) and isinstance(expect[key], list):
+                if not is_json_contains(actual[key], expect[key]):
+                    return False
+            elif actual[key] != expect[key]:
+                return False
+
+    return True
+
 if __name__ == '__main__':
     print(get_host())
     print(get_current_time())
+    check_dict = {"a": {"C": "122", "B": {"C": "122", "B": {"kk": 123}}}, "b": [1, 2, [3, 2], {"1": [{}, "2"]}, {"1": "2"}], "c": 2}
+    expect_dict = {"a": {"C": "122", "B": {"B": {"kk": 123}}}, "b": [1, [2, 3], {"1": "2", "2": "2"}], "c": 2}
+    print(is_json_contains(check_dict, expect_dict))
+
+

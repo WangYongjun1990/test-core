@@ -38,6 +38,8 @@ Date: 2018/6/21 11:41
 """
 import json
 
+import time
+
 from flask import Blueprint
 from flask_restful import Resource
 
@@ -147,6 +149,7 @@ class Project(Resource):
 
         elif action == 'list':
             try:
+                # time.sleep(5)
 
                 # 查询列表入参可以为空或者输入项目名称
                 project_name = data.pop('projectName')

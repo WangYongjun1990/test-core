@@ -76,8 +76,8 @@ def gen_timestamp(time_flag, count):
     two_month_ago = 1525276800000
     one_month_ago = 1527955200000
     one_week_ago = 1530028800000
-    one_day_ago = 0
-    one_hour_aga = 0
+    one_day_ago = 1531065600000
+    one_hour_aga = 1531208640000
 
     now = int(1000 * time.time())
 
@@ -99,4 +99,4 @@ def gen_timestamp(time_flag, count):
             data_file.write(str(delta)+'\n')
 
 if __name__ == '__main__':
-    gen_timestamp('2m', 100000)
+    gen_timestamp('1h', 150000)

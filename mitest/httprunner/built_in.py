@@ -14,6 +14,8 @@ import time
 
 from mitest.httprunner.compat import basestring, builtin_str, integer_types, str
 from mitest.httprunner.exception import ParamsError
+from mitest.utils.encryption import Encryption
+from mitest.utils.tools import is_json_contains
 from requests_toolbelt import MultipartEncoder
 
 
@@ -130,6 +132,26 @@ def startswith(check_value, expect_value):
 def endswith(check_value, expect_value):
     assert builtin_str(check_value).endswith(builtin_str(expect_value))
 
+
+def json_contains(check_value, expect_value):
+    assert isinstance(check_value, basestring)
+    # bytes转str
+    str_content = check_value.decode('utf-8')
+    # str转dict
+    dict_check = json.loads(str_content)
+    assert isinstance(expect_value, basestring)
+    dict_expect = json.loads(expect_value)
+    # for key in dict_expect:
+    #     assert key in dict_check
+    #     assert dict_check[key] == dict_expect[key]
+    assert is_json_contains(dict_check, dict_expect)
+
+
+def db_validate(check_value, expect_value):
+    print(check_value, type(check_value))
+    print(expect_value, type(expect_value))
+    assert 1 == 0
+
 """ built-in hooks
 """
 def setup_hook_prepare_kwargs(request):
@@ -160,3 +182,13 @@ def teardown_db_select(response, sql=None):
     str_content = json.dumps(dict_content, ensure_ascii=False)
     # str_json转bytes
     response.content = str_content.encode('utf-8')
+
+
+def db_select(sql):
+    return sql + 's'
+
+
+def add_sign(request):
+    e = Encryption()
+    if 'json' in request:
+        request['json'] = json.loads(e.map_to_sign_common(request['json']))

@@ -43,6 +43,7 @@ class TestReport(db.Model):
     report = db.Column(db.Text(4294000000), nullable=False)
     url = db.Column(db.String(150))
     system_id = db.Column(db.Integer, db.ForeignKey('system_info.id'))
+    url = db.Column(db.String(150))
     system = db.relationship('SystemInfo', backref=db.backref('test_reports'))
 
     def __repr__(self):

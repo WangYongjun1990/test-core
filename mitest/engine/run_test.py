@@ -52,7 +52,7 @@ def run_test(**kwargs):
 
 if __name__ == '__main__':
     kwargs = {
-        "testcase_id_list": ['9', '10'],
+        "testcase_id_list": ['11', '12'],
         # "testcase_id_list": ['1', '2', '3'],
         "env_name": "mock",
         # "testsuite_id_list": ['1'],
