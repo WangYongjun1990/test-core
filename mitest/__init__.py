@@ -32,6 +32,7 @@ from .views import (
     module, Module,
     testsuite, Testsuite,
     testcase, Testcase,
+    run, Run,
 )
 
 app.register_blueprint(env)
@@ -40,6 +41,7 @@ app.register_blueprint(system)
 app.register_blueprint(module)
 app.register_blueprint(testsuite)
 app.register_blueprint(testcase)
+app.register_blueprint(run)
 
 view = Api(app)
 view.add_resource(Env, '/env/<action>')
@@ -48,6 +50,7 @@ view.add_resource(System, '/system/<action>')
 view.add_resource(Module, '/module/<action>')
 view.add_resource(Testsuite, '/testsuite/<action>')
 view.add_resource(Testcase, '/testcase/<action>')
+view.add_resource(Run, '/run')
 
 migrate = Migrate(app, db)
 

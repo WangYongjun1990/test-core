@@ -44,7 +44,7 @@ from flask import Blueprint
 from flask_restful import Resource
 
 from mitest.api.comm_log import logger
-from mitest.api.mysql_manager import ProjectInfoManager
+from mitest.api.mysql_manager import ProjectInfoManager, SystemInfoManager, ModuleInfoManager, TestsuiteInfoManager
 from mitest.views.wrappers import timer
 from mitest.utils.common import get_request_json, make_response
 
@@ -183,6 +183,52 @@ class Project(Resource):
                 return make_response({"code": "000", "desc": desc_list})
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
+
+        elif action == 'subtree':
+            try:
+                project_id = data.pop('id')
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
+
+            sim = SystemInfoManager()
+            system_list = sim.select_by_project_id(project_id)
+
+            subtree = []
+            index_id = 0
+            for s in system_list:
+                system_dict = dict()
+                index_id += 1
+                system_dict['id'] = index_id
+                system_dict['label'] = s.system_name
+                system_dict['systemId'] = s.id
+
+                module_list = ModuleInfoManager.query_all_module(system_id=s.id)
+                children_module = list()
+                for m in module_list:
+                    module_dict = dict()
+                    index_id += 1
+                    module_dict["id"] = index_id
+                    module_dict["moduleId"] = m.id
+                    module_dict["label"] = m.module_name
+
+                    testsuite_list = TestsuiteInfoManager.query_all_testsuite(module_id=m.id)
+                    children_testsuite = list()
+                    for t in testsuite_list:
+                        testsuite_dict = dict()
+                        index_id += 1
+                        testsuite_dict["id"] = index_id
+                        testsuite_dict["testsuiteId"] = t.id
+                        testsuite_dict["label"] = t.testsuite_name
+                        children_testsuite.append(testsuite_dict)
+
+                    module_dict["children"] = children_testsuite
+                    children_module.append(module_dict)
+                system_dict["children"] = children_module
+
+                subtree.append(system_dict)
+
+            # logger.debug(subtree)
+            return make_response({"code": "000", "data": subtree})
 
         else:
             return make_response({"code": "100", "desc": "url错误，不存在的接口动作<{action}>".format(action=action)})

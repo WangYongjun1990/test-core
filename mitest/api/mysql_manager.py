@@ -94,23 +94,23 @@ class ProjectInfoManager(object):
     def is_project_name_exist(project_name):
         project_name = '%' + project_name + '%'
         obj = ProjectInfo.query.filter(ProjectInfo.project_name.like(project_name)).first()
-        if  obj:
+        if obj:
             return True
         else:
-            return False    \
+            return False
 
     @staticmethod
     def is_project_name_exist_for_update(project_name):
         obj = ProjectInfo.query.filter_by(project_name=project_name).first()
-        if  obj:
+        if obj:
             return True
         else:
-            return False    \
+            return False
 
     @staticmethod
-    def is_project_name_exist_union(id,project_name):
-        obj = ProjectInfo.query.filter_by(project_name=project_name,id=id).first()
-        if  obj:
+    def is_project_name_exist_union(id, project_name):
+        obj = ProjectInfo.query.filter_by(project_name=project_name, id=id).first()
+        if obj:
             return True
         else:
             return False
@@ -128,7 +128,7 @@ class ProjectInfoManager(object):
         if project_name == "":
             obj = ProjectInfo.query.all()
         else:
-            project_name = '%'+project_name+'%'
+            project_name = '%' + project_name + '%'
             obj = ProjectInfo.query.filter(ProjectInfo.project_name.like(project_name)).all()
 
         return obj
@@ -139,6 +139,12 @@ class ProjectInfoManager(object):
         obj = SystemInfo.query.filter_by(project_id=id_).all()
 
         return obj
+
+    @staticmethod
+    def select_id_by(project_name):
+        obj = ProjectInfo.query.filter_by(project_name=project_name).first()
+
+        return obj.id
 
 
 class SystemInfoManager(object):
@@ -191,6 +197,26 @@ class SystemInfoManager(object):
             return True
         else:
             return False
+
+    @staticmethod
+    def system_info(system_name):
+        if system_name == "":
+            obj = SystemInfo.query.all()
+        else:
+            system_name = '%' + system_name + '%'
+            obj = SystemInfo.query.filter(SystemInfo.system_name.like(system_name)).all()
+
+        return obj
+
+    @staticmethod
+    def project_info(id_):
+        obj = ProjectInfo.query.filter_by(id=id_).all()
+        return obj
+
+    @staticmethod
+    def select_by_project_id(project_id):
+        obj = SystemInfo.query.filter_by(project_id=project_id).all()
+        return obj
 
 
 class ModuleInfoManager(object):
@@ -261,7 +287,12 @@ class TestsuiteInfoManager(object):
     @staticmethod
     def query_all_testsuite(module_id):
         obj = TestsuiteInfo.query.filter_by(module_id=module_id).all()
-        return (obj)
+        return obj
+
+    @staticmethod
+    def query_testsuite_by_id(id_):
+        obj = TestsuiteInfo.query.filter_by(id=id_).first()
+        return obj
 
 
 class TestcaseInfoManager(object):
@@ -301,6 +332,12 @@ class TestcaseInfoManager(object):
 
 class TestReportManager(object):
     @staticmethod
+    def insert_testreport(**kwargs):
+        obj = TestReport(**kwargs)
+        db.session.add(obj)
+        db.session.commit()
+
+    @staticmethod
     def query_testreport(system_id):
         obj = TestReport.query.filter_by(system_id=system_id).all()
         return obj
@@ -311,5 +348,7 @@ def obj_set_value(obj, attr, value):
         setattr(obj, attr, value)
     return obj
 
+
 if __name__ == '__main__':
-    obj_set_value()
+    # obj_set_value()
+    pass

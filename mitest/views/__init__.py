@@ -15,3 +15,4 @@ from .system import system, System
 from .module import module, Module
 from .testsuite import testsuite, Testsuite
 from .testcase import testcase, Testcase
+from .run import run, Run

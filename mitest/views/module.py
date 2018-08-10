@@ -35,8 +35,8 @@ class Module(Resource):
         mim = ModuleInfoManager()
         if action == 'add':
             try:
-                system_id = data["system_id"]
-                module_name = data["module_name"]
+                system_id = data["systemId"]
+                module_name = data["moduleName"]
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
             module_name_list = mim.query_module(system_id,module_name)
@@ -47,7 +47,7 @@ class Module(Resource):
         elif action == 'edit':
             try:
                 id = data["id"]
-                module_name = data["module_name"]
+                module_name = data["moduleName"]
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
             res_module_name = mim.query_module_id(id=id)[0].module_name
@@ -66,7 +66,7 @@ class Module(Resource):
             pass
         elif action == 'list':
             try:
-                system_id = data["system_id"]
+                system_id = data["systemId"]
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
             module_list = mim.query_all_module(system_id=system_id)

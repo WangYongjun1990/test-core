@@ -49,7 +49,8 @@ def load_test(**kwargs):
         testset_list = []
         for testcase_id in testcase_id_list:
             obj = TestcaseInfo.query.filter_by(id=testcase_id).first()
-
+            if not obj:
+                continue
             testset = get_testset_from_obj(obj)
             testset = add_base_host(testset, base_host)
             testset_list.append(testset)

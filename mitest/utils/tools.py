@@ -8,6 +8,8 @@ Description:
 Author: wangyongjun
 Date: 2018/6/21 14:03
 """
+import datetime
+import json
 import socket
 import time
 
@@ -71,11 +73,30 @@ def is_json_contains(actual, expect):
 
     return True
 
+
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.__str__()
+        return json.JSONEncoder.default(self, obj)
+
+
+def json_dumps(dic):
+    return json.dumps(dic, ensure_ascii=False, cls=DateEncoder)
+
+
+def json_loads(str_):
+    return json.loads(str_)
+
 if __name__ == '__main__':
     print(get_host())
     print(get_current_time())
     check_dict = {"a": {"C": "122", "B": {"C": "122", "B": {"kk": 123}}}, "b": [1, 2, [3, 2], {"1": [{}, "2"]}, {"1": "2"}], "c": 2}
     expect_dict = {"a": {"C": "122", "B": {"B": {"kk": 123}}}, "b": [1, [2, 3], {"1": "2", "2": "2"}], "c": 2}
     print(is_json_contains(check_dict, expect_dict))
+
+    import mitest.utils.common as c
+    print(c.__dir__())
+
 
 

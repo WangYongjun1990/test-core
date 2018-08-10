@@ -157,8 +157,9 @@ class Env(Resource):
                 pim = EnvInfoManager()
 
                 # 判断入参有环境名时，是否可以查询
-                if not pim.is_env_name_exist(env_name):
-                    return make_response({"code": "200", "desc": "环境不存在,无法查询"})
+                if env_name:
+                    if not pim.is_env_name_exist(env_name):
+                        return make_response({"code": "000", "desc": []})
 
                 result1 = pim.env_info(env_name)
                 desc_list = []
@@ -173,7 +174,7 @@ class Env(Resource):
                 for j in envs:
                     env_dict = {}
                     env_dict["id"] = j[0]
-                    env_dict["envtName"] = j[1]
+                    env_dict["envName"] = j[1]
                     env_dict["baseHost"] = j[2]
                     env_dict["dubboZookeeper"] = j[3]
                     env_dict["mqKey"] = j[4]

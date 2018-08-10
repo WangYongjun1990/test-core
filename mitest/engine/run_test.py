@@ -8,13 +8,14 @@ Description:
 Author: wangyongjun
 Date: 2018/6/22 下午9:49
 """
+import copy
 import json
 import time
 
 from mitest.httprunner import HttpRunner
 from mitest.engine.exceptions import RunCaseError, LoadCaseError
 from mitest.engine.load_test import load_test
-from mitest.engine.report import perfect_summary
+from mitest.engine.report import perfect_summary, save_report
 from mitest.config.default import get_config
 
 config = get_config()
@@ -38,7 +39,8 @@ def run_test(**kwargs):
         start_time = time.strftime('%Y-%m-%d %H-%M-%S', time.localtime(time.time()))
         runner.run(testset)
         perfect_summary(runner.summary, test_meta_list)
-
+        print(runner.summary)
+        runner_summary = copy.deepcopy(runner.summary)
         report_path = runner.gen_html_report(
             html_report_name='default',
             html_report_template=config.REPORT_TEMPLATE_PATH
@@ -47,6 +49,7 @@ def run_test(**kwargs):
     except Exception:
         raise RunCaseError
 
+    save_report(report_path, runner_summary)
     return report_path
 
 
@@ -59,7 +62,7 @@ if __name__ == '__main__':
         # "module_id_list": ['4'],
     }
     run_test(**kwargs)
-    # run_test(testcase_id='1', env_name='mo2ck')
+    # run_test(testcase_id='1', env_ name='mo2ck')
     testset = {
             "name": "myMock",
             "config": {

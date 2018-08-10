@@ -101,6 +101,8 @@ class TestsuiteInfo(db.Model):
     update_time = db.Column(db.DateTime, onupdate=db.func.now())
     testsuite_name = db.Column(db.String(80), nullable=False)
     simple_desc = db.Column(db.String(100))
+    intf_type = db.Column(db.String(20))
+    intf_info = db.Column(db.String(200))
     module_id = db.Column(db.Integer, db.ForeignKey('module_info.id'))
     module = db.relationship('ModuleInfo', backref=db.backref('testsuites'))
 

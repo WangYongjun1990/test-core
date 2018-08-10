@@ -14,6 +14,7 @@ from flask import Blueprint
 from flask_restful import Resource
 
 from mitest.api.comm_log import logger
+from mitest.engine.handle_testcase import handle_testcase
 from mitest.views.wrappers import timer
 from mitest.utils.common import get_request_json, make_response
 
@@ -29,7 +30,7 @@ class Testcase(Resource):
         data = get_request_json()
 
         if action == 'add':
-            pass
+            handle_testcase(action, **data)
 
         elif action == 'edit':
             pass

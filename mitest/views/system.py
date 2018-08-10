@@ -37,6 +37,13 @@ Date: 2018/6/21 11:44
         “id":xxx
     }
 
+
+查询接口:/system/list
+入参格式：
+    {
+        “systemName":xxx（非必填）
+    }
+
 """
 import json
 
@@ -64,9 +71,9 @@ class System(Resource):
                 system_name = data.pop('systemName')
                 simple_desc = data.pop('simpleDesc', None)
                 project_id = data.pop('projectId')
-                test_user = data.pop('testUser')
-                dev_user = data.pop('devUser')
-                publish_app = data.pop('publishApp')
+                test_user = data.pop('testUser', None)
+                dev_user = data.pop('devUser', None)
+                publish_app = data.pop('publishApp', None)
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
 
@@ -92,9 +99,9 @@ class System(Resource):
                 system_name = data.pop('systemName')
                 simple_desc = data.pop('simpleDesc')
                 project_id = data.pop('projectId')
-                test_user = data.pop('testUser')
-                dev_user = data.pop('devUser')
-                publish_app = data.pop('publishApp')
+                test_user = data.pop('testUser', None)
+                dev_user = data.pop('devUser', None)
+                publish_app = data.pop('publishApp', None)
             except KeyError:
                 return make_response({"code": "100", "desc": "入参校验失败"})
 
@@ -133,7 +140,81 @@ class System(Resource):
             pass
 
         elif action == 'list':
-            pass
+            try:
+                # 查询列表入参可以为空或者输入系统名称
+                system_name = data.pop('systemName')
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
+
+            pim = SystemInfoManager()
+
+            if system_name != "":
+                if not pim.is_system_name_exist(system_name):
+
+                    return make_response({"code": "200", "desc": "系统名不存在,无法查询"})
+
+            result1 = pim.system_info(system_name)
+
+            # print(system_name)
+            # print(result1)
+
+            desc_list = []
+            systems = []
+
+
+            # 循环查询system表返回所有的System数据，先通过project_id查询project_info表对应的name，再通过子循环往systems List添加信息，如果project_id存在，才插入
+
+            for i in result1:
+                result2 = pim.project_info(i.project_id)
+                for k in result2:
+                    systems.append([i.id, i.system_name, i.simple_desc, k.project_name])
+                # systems.append([i.id, i.system_name, i.simple_desc, i.project_id])
+            print(systems)
+
+                # 遍历system_list 并将其添加到字典中，并对字段赋值
+            for j in systems:
+                system_dict = {}
+                system_dict["id"] = j[0]
+                system_dict["systemName"] = j[1]
+                system_dict["description"] = j[2]
+                system_dict["belongProject"] = j[3]
+                desc_list.append(system_dict)
+            # 将desc_list 根据项目名进行排序
+
+            desc_list.sort(key = lambda desc_sort:(desc_sort.get("systemName",0)))
+            return make_response({"code": "000", "desc": desc_list})
+
+        elif action == 'queryByProjectId':
+            """ 根据projectId查询项目下的所有系统
+            url: /system/queryByProjectId
+            input:
+                {"projectId":"14"}
+            output:
+                {
+                  "code": "000",
+                  "data": [
+                    {
+                      "systemId": 10,
+                      "systemName": "mock"
+                    }
+                  ]
+                }
+            """
+            try:
+                project_id = data.pop('projectId')
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
+
+            obj = SystemInfoManager.select_by_project_id(project_id)
+            system_list = []
+            for s in obj:
+                system_info_dic = {
+                    "systemName": s.system_name,
+                    "systemId": s.id,
+                }
+                system_list.append(system_info_dic)
+
+            return make_response({"code": "000", "data": system_list})
 
         else:
             return make_response({"code": "100", "desc": "url错误，不存在的接口动作<{action}>".format(action=action)})

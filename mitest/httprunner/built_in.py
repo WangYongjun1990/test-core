@@ -18,6 +18,7 @@ from mitest.httprunner.exception import ParamsError
 from mitest.utils.encryption import Encryption
 from mitest.utils.tools import is_json_contains
 from requests_toolbelt import MultipartEncoder
+from mitest.utils.custom import *
 
 
 """ built-in functions
@@ -134,26 +135,21 @@ def endswith(check_value, expect_value):
     assert builtin_str(check_value).endswith(builtin_str(expect_value))
 
 
-def json_contains(check_value, expect_value):
-    assert isinstance(check_value, basestring)
-    # bytes转str
-    str_content = check_value.decode('utf-8')
-    # str转dict
-    dict_check = json.loads(str_content)
-    assert isinstance(expect_value, basestring)
-    dict_expect = json.loads(expect_value)
-    # for key in dict_expect:
-    #     assert key in dict_check
-    #     assert dict_check[key] == dict_expect[key]
-    assert is_json_contains(dict_check, dict_expect)
+# def json_contains(check_value, expect_value):
+#     assert isinstance(check_value, basestring)
+#     # bytes转str
+#     str_content = check_value.decode('utf-8')
+#     # str转dict
+#     dict_check = json.loads(str_content)
+#     assert isinstance(expect_value, basestring)
+#     dict_expect = json.loads(expect_value)
+#     # for key in dict_expect:
+#     #     assert key in dict_check
+#     #     assert dict_check[key] == dict_expect[key]
+#     assert is_json_contains(dict_check, dict_expect)
 
 
-def db_validate(check_value, expect_value):
-    print(check_value, type(check_value))
-    print(expect_value, type(expect_value))
-    # res = sql_execute(check_value, env_name='aliuat')
-    # check_value = res[0][0]
-    assert check_value == expect_value
+
 
 """ built-in hooks
 """
@@ -174,24 +170,24 @@ def sleep_N_secs(n_secs):
     time.sleep(n_secs)
 
 
-def teardown_db_select(response, sql=None):
-    # bytes转str
-    str_content = response.content.decode('utf-8')
-    # str转dict
-    dict_content = json.loads(str_content)
-    # 添加sql查询结果
-    dict_content['db_result'] = sql
-    # dict转str_json
-    str_content = json.dumps(dict_content, ensure_ascii=False)
-    # str_json转bytes
-    response.content = str_content.encode('utf-8')
+# def teardown_db_select(response, sql=None):
+#     # bytes转str
+#     str_content = response.content.decode('utf-8')
+#     # str转dict
+#     dict_content = json.loads(str_content)
+#     # 添加sql查询结果
+#     dict_content['db_result'] = sql
+#     # dict转str_json
+#     str_content = json.dumps(dict_content, ensure_ascii=False)
+#     # str_json转bytes
+#     response.content = str_content.encode('utf-8')
+#
+#
+# def db_select(sql):
+#     return sql + 's'
 
 
-def db_select(sql):
-    return sql + 's'
-
-
-def add_sign(request):
-    e = Encryption()
-    if 'json' in request:
-        request['json'] = json.loads(e.map_to_sign_common(request['json']))
+# def add_sign(request):
+#     e = Encryption()
+#     if 'json' in request:
+#         request['json'] = json.loads(e.map_to_sign_common(request['json']))
