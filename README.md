@@ -1,2 +1,2 @@
-# mitest-platform-core
-mitest-platform-core
+# test-core
+test-core
