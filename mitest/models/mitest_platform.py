@@ -128,3 +128,17 @@ class TestcaseInfo(db.Model):
 
     def __repr__(self):
         return '<TestcaseInfo %r, id %r>' % (self.testcase_name, self.id)
+
+
+class PublicVariableInfo(db.Model):
+    __tablename__ = 'public_variable_info'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    create_time = db.Column(db.DateTime, default=db.func.now())
+    update_time = db.Column(db.DateTime, onupdate=db.func.now())
+    variable_name = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.Integer, nullable=False)
+    value = db.Column(db.Text, nullable=False)
+    simple_desc = db.Column(db.String(50))
+
+    def __repr__(self):
+        return '<PublicVariableInfo %r, id %r>' % (self.variable_name, self.id)

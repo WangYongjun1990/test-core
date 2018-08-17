@@ -328,6 +328,20 @@ class TestcaseInfoManager(object):
     def get_testcase(id_):
         obj = TestcaseInfo.query.filter_by(id=id_).first()
         return obj
+    @staticmethod
+    def is_testcase_id_exist(id_):
+        """判断查询或删除用例时,id是否存在"""
+        obj=TestcaseInfo.query.filter_by(id=id_).first()
+        if obj:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def get_suite_testcase(id_):
+        '''获取某一测试用例集下的testcase'''
+        obj = TestcaseInfo.query.filter_by(testsuite_id=id_).all()
+        return obj
 
 
 class TestReportManager(object):

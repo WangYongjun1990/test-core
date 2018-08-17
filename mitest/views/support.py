@@ -39,10 +39,15 @@ class Support(Resource):
 
             return make_response({"code": "000", "data": comparators})
 
-        elif action == 'queryCustomHooks':
-            hooks = custom['hooks']
+        elif action == 'queryCustomSetupHooks':
+            setup_hooks = custom['setup-hooks']
 
-            return make_response({"code": "000", "data": hooks})
+            return make_response({"code": "000", "data": setup_hooks})
+
+        elif action == 'queryCustomTeardownHooks':
+            teardown_hooks = custom['teardown-hooks']
+
+            return make_response({"code": "000", "data": teardown_hooks})
 
         else:
             return make_response({"code": "100", "desc": "url错误，不存在的接口动作<{action}>".format(action=action)})

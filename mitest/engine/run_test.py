@@ -17,6 +17,7 @@ from mitest.engine.exceptions import RunCaseError, LoadCaseError
 from mitest.engine.load_test import load_test
 from mitest.engine.report import perfect_summary, save_report
 from mitest.config.default import get_config
+from mitest.utils.tools import json_dumps
 
 config = get_config()
 
@@ -30,6 +31,8 @@ def run_test(**kwargs):
         raise LoadCaseError('没有可执行的用例')
 
     print("{1} testset:{0}".format(testset, type(testset)))
+    tmp = testset[0]
+    print(json_dumps(tmp))
     try:
         # summary = run(testset, report_name='testMock')
         kwargs = {
@@ -55,7 +58,7 @@ def run_test(**kwargs):
 
 if __name__ == '__main__':
     kwargs = {
-        "testcase_id_list": ['11', '12'],
+        "testcase_id_list": ['16'],
         # "testcase_id_list": ['1', '2', '3'],
         "env_name": "mock",
         # "testsuite_id_list": ['1'],

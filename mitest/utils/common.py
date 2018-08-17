@@ -16,6 +16,9 @@ from flask import jsonify
 
 from mitest.api.comm_log import logger
 from mitest.utils.tools import json_dumps
+from mitest.config.default import get_config
+
+CONFIG = get_config()
 
 
 def get_request_json():
@@ -32,11 +35,11 @@ def make_response(response_dict):
 def read_custom():
     function_name_pattern = r'def ([\w_]+)\('
     function_description_pattern = r'    """ ([\w_]+)'
-    custom_type_pattern = r'""" custom ([\w_]+)'
+    custom_type_pattern = r'""" custom ([\w_-]+)'
     custom = {}
     custom_type = None
     function_name = None
-    with open('custom.py', mode='r', encoding='utf8') as f:
+    with open(CONFIG.CUSTOM_FILE, mode='r', encoding='utf8') as f:
         for line in f:
             if line.startswith('""" custom '):
                 # 自定义函数类型
@@ -57,7 +60,7 @@ def read_custom():
                         break
                 continue
 
-    print(json_dumps(custom))
+    # print(json_dumps(custom))
     return custom
 
 

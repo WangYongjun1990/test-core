@@ -16,6 +16,9 @@ from mitest.api.comm_log import logger
 
 
 class Encryption(RemoteBridge):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def map_to_sign(self, params):
         if isinstance(params, str):
             params_dict = eval(params)

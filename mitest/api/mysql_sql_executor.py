@@ -18,17 +18,20 @@ from mitest.api.comm_log import logger
 from mitest.models.mitest_platform import EnvInfo
 
 
-def sql_execute(sql, env_name='aliuat'):
+def sql_execute(sql, env_name=None, db_connect=None):
     """
     """
     # env = env.upper()
-    try:
-        obj = EnvInfo.query.filter_by(env_name=env_name).first()
-        db_info = obj.db_connect
-        # db_info = db_connects[env][db_type]
+    if env_name:
+        try:
+            obj = EnvInfo.query.filter_by(env_name=env_name).first()
+            db_info = obj.db_connect
+            # db_info = db_connects[env][db_type]
 
-    except Exception as err:
-        raise Exception('\n'.join([str(err), traceback.format_exc()]))
+        except Exception as err:
+            raise Exception('\n'.join([str(err), traceback.format_exc()]))
+    elif db_connect:
+        db_info = db_connect
 
     engine = create_engine(db_info, echo=False, poolclass=NullPool)
     return_info = None

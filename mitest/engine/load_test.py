@@ -29,17 +29,14 @@ def load_test(**kwargs):
     module_id_list = kwargs.pop('module_id_list', None)
     system_id_list = kwargs.pop('system_id_list', None)
 
-    obj = EnvInfo.query.filter_by(env_name=env_name).first()
-    try:
-        base_host = obj.base_host
-    except AttributeError:
-        raise LoadCaseError('No Base Host')
+    env_info = EnvInfo.query.filter_by(env_name=env_name).first()
+
 
     test_meta_list = []
     if testcase_id:
         obj = TestcaseInfo.query.filter_by(id=testcase_id).first()
         testset = get_testset_from_obj(obj)
-        testset = add_base_host(testset, base_host)
+        testset = add_env_info_to_config(testset, env_info)
         meta_data = get_meta(obj, testset)
         test_meta_list.append(meta_data)
 
@@ -52,7 +49,7 @@ def load_test(**kwargs):
             if not obj:
                 continue
             testset = get_testset_from_obj(obj)
-            testset = add_base_host(testset, base_host)
+            testset = add_env_info_to_config(testset, env_info)
             testset_list.append(testset)
             meta_data = get_meta(obj, testset)
             test_meta_list.append(meta_data)
@@ -66,7 +63,7 @@ def load_test(**kwargs):
 
             for obj in obj_list:
                 testset = get_testset_from_obj(obj)
-                testset = add_base_host(testset, base_host)
+                testset = add_env_info_to_config(testset, env_info)
                 testset_list.append(testset)
                 meta_data = get_meta(obj, testset)
                 test_meta_list.append(meta_data)
@@ -80,7 +77,7 @@ def load_test(**kwargs):
 
             for obj in obj_list:
                 testset = get_testset_from_obj(obj)
-                testset = add_base_host(testset, base_host)
+                testset = add_env_info_to_config(testset, env_info)
                 testset_list.append(testset)
 
         return [testset_list, test_meta_list]
@@ -92,7 +89,7 @@ def load_test(**kwargs):
 
             for obj in obj_list:
                 testset = get_testset_from_obj(obj)
-                testset = add_base_host(testset, base_host)
+                testset = add_env_info_to_config(testset, env_info)
                 testset_list.append(testset)
 
         return [testset_list, test_meta_list]
@@ -110,6 +107,43 @@ def get_testcase_by_id(testcase_id):
     except JSONDecodeError:
         raise LoadCaseError('Json Load testcase_info.request Error')
 
+    return testset
+
+
+def add_env_info_to_config(testset, env_info):
+    try:
+        base_host = env_info.base_host
+        kwargs = {
+            "dubbo_zookeeper": env_info.dubbo_zookeeper,
+            "mq_key": env_info.mq_key,
+            "db_connect": env_info.db_connect,
+            "remote_host": env_info.remote_host,
+            "disconf_host": env_info.disconf_host,
+            "redis_connect": env_info.redis_connect,
+        }
+    except AttributeError:
+        raise LoadCaseError('No Base Host')
+
+    testset = add_base_host(testset, base_host)
+    testset = add_other_env(testset, **kwargs)
+
+    return testset
+
+
+def add_other_env(testset, **kwargs):
+    """
+    给testset增加base_host
+    :param testset:
+    :param kwargs:
+    :return:
+    """
+    variables_list = testset['config']['variables']
+    variables_list.append({"DUBBO_ZOOKEEPER": kwargs.pop('dubbo_zookeeper')})
+    variables_list.append({"MQ_KEY": kwargs.pop('mq_key')})
+    variables_list.append({"DB_CONNECT": kwargs.pop('db_connect')})
+    variables_list.append({"REMOTE_HOST": kwargs.pop('remote_host')})
+    variables_list.append({"DISCONF_HOST": kwargs.pop('disconf_host')})
+    variables_list.append({"REDIS_CONNECT": kwargs.pop('redis_connect')})
     return testset
 
 

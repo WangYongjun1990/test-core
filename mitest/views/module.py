@@ -44,6 +44,7 @@ class Module(Resource):
                 return make_response({"code": "201", "desc": "这个名称的测试模块已经存在"})
             mim.insert_module(module_name = module_name,system_id = system_id)
             return make_response({"code": "000", "desc": "{}模块添加成功".format(module_name)})
+
         elif action == 'edit':
             try:
                 id = data["id"]
@@ -55,6 +56,7 @@ class Module(Resource):
                 return make_response({"code": "201", "desc": "您修改的模块名称已存在"})
             mim.update_module(id_=id,module_name=module_name)
             return make_response({"code": "000", "desc": "操作成功"})
+
         elif action == 'delete':
             try:
                 id = data["id"]
@@ -62,8 +64,10 @@ class Module(Resource):
                 return make_response({"code": "100", "desc": "入参校验失败"})
             mim.delete_module(id_=id)
             return make_response({"code": "000", "desc": "操作成功"})
+
         elif action == 'detail':
             pass
+
         elif action == 'list':
             try:
                 system_id = data["systemId"]
@@ -92,6 +96,38 @@ class Module(Resource):
                 module_dict["children"] = testsuite
                 res.append(module_dict)
             return make_response({"code": "000", "desc": res})
+
+        elif action == 'queryBySystemId':
+            """ 根据SystemId查询系统下的所有模块
+            url: /module/queryBySystemId
+            input:
+                {"systemId":"9"}
+            output:
+                {
+                  "code": "000",
+                  "data": [
+                    {
+                      "systemId": 4,
+                      "systemName": "申请"
+                    }
+                  ]
+                }
+            """
+            try:
+                system_id = data.pop('systemId')
+            except KeyError:
+                return make_response({"code": "100", "desc": "入参校验失败"})
+
+            obj = ModuleInfoManager.query_all_module(system_id)
+            module_list = []
+            for m in obj:
+                module_info_dic = {
+                    "systemName": m.module_name,
+                    "systemId": m.id,
+                }
+                module_list.append(module_info_dic)
+
+            return make_response({"code": "000", "data": module_list})
         else:
             return make_response({"code": "100", "desc": "url错误，不存在的接口动作<{action}>".format(action=action)})
 if __name__ == '__main__':

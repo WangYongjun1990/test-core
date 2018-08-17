@@ -13,12 +13,35 @@ import traceback
 import requests
 
 from mitest.api.comm_log import logger
+from mitest.api.mysql_manager import EnvInfoManager
 
 
 class RemoteBridge(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
+        env_name = kwargs.pop('env_name', None)
+        dubbo_zookeeper = kwargs.pop('dubbo_zookeeper', None)
+        mq_key = kwargs.pop('mq_key', None)
+        remote_host = kwargs.pop('remote_host', None)
+
+        if env_name:
+            self.env = str(env_name).upper()
+            obj = EnvInfoManager.env_info(self.env)[0]
+            self.remote_host = obj.remote_host
+            self.dubbo_zookeeper = obj.dubbo_zookeeper
+            mq_key_dic = json.loads(obj.mq_key)
+            self.ons_access_key = mq_key_dic['ak']
+            self.ons_secret_key = mq_key_dic['sk']
+        if dubbo_zookeeper:
+            self.dubbo_zookeeper = dubbo_zookeeper
+        if remote_host:
+            self.remote_host = remote_host
+        if mq_key:
+            mq_key_dic = json.loads(mq_key)
+            self.ons_access_key = mq_key_dic['ak']
+            self.ons_secret_key = mq_key_dic['sk']
+
         # self.remote_host = 'http://99.48.58.177:18181'
-        self.remote_host = 'http://99.48.66.208:18181'
+        # self.remote_host = 'http://99.48.66.208:18181'
         # self.remote_host = 'http://99.48.58.83:18181'
         self.heard_info = {"Content-Type": "application/json;charset=UTF-8", "Connection": "close"}
         self.s = requests.session()

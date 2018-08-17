@@ -94,9 +94,3 @@ if __name__ == '__main__':
     check_dict = {"a": {"C": "122", "B": {"C": "122", "B": {"kk": 123}}}, "b": [1, 2, [3, 2], {"1": [{}, "2"]}, {"1": "2"}], "c": 2}
     expect_dict = {"a": {"C": "122", "B": {"B": {"kk": 123}}}, "b": [1, [2, 3], {"1": "2", "2": "2"}], "c": 2}
     print(is_json_contains(check_dict, expect_dict))
-
-    import mitest.utils.common as c
-    print(c.__dir__())
-
-
-
